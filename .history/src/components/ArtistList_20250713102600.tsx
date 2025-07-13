@@ -8,13 +8,23 @@ import { fetchArtistList } from "@/redux/slices/artistListSlice";
 export default function ArtistList() {
 	// Artist List data
 	const dispatch = useDispatch<AppDispatch>();
-	const { artistList: dataArtistList, totalCount } = useSelector(
+	const { artistList: dataArtistList } = useSelector(
 		(state: RootState) => state.artistList,
 	);
-
+	// Kiểm tra toàn bộ state lưu trong Redux
+	// const fullState = useSelector((state: RootState) => state);
+	// console.log("Full redux state", fullState);
+	
 	useEffect(() => {
 		dispatch(fetchArtistList());
 	}, [dispatch]);
+
+	// test đã fetch dữ liệu thành công chưa
+	// useEffect(() => {
+	// 	if (dataArtistList) {
+	// 		console.log("Dữ liệu dataArtistList đã fetch:", dataArtistList);
+	// 	}
+	// }, [dataArtistList]);
 
 	// Search
 	const artistSearch = useSelector(
@@ -23,22 +33,21 @@ export default function ArtistList() {
 	const [currentPage, setCurrentPage] = useState(1);
 	const [itemsPerPage, setItemsPerPage] = useState(10);
 
-	// Filter data based on search
+	// Lọc dữ liệu theo search (tên customer hoặc artist) và ngày tháng năm
 	const filteredArtists = Array.isArray(dataArtistList)
-		? dataArtistList.filter((artist) =>
-			artist.name?.toLowerCase().includes(artistSearch.toLowerCase()) ||
-			artist.tagName?.toLowerCase().includes(artistSearch.toLowerCase())
-		)
-		: [];
-
+	? dataArtistList.filter((c) =>
+		c.nameArtist.toLowerCase().includes(artistSearch.toLowerCase())
+	  )
+	: [];
+  
 	useEffect(() => {
 		setCurrentPage(1);
 	}, [artistSearch]);
-
 	// Calculate pagination
 	const indexOfLastItem = currentPage * itemsPerPage;
 	const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 	const currentItems = filteredArtists?.slice(indexOfFirstItem, indexOfLastItem);
+	const totalItems = filteredArtists.length;
 
 	const handlePageChange = (page: number) => {
 		setCurrentPage(page);
@@ -58,23 +67,24 @@ export default function ArtistList() {
 					</p>
 				) : (
 					currentItems.map((artist) => (
-						<ArtistItem
-							key={artist.id}
-							name={artist.name}
-							code={artist.id}
-							specialty={artist.tagName}
-							phone={artist.phoneNumber || 'N/A'}
-							rating={0}
-							reviewCount={0}
-							avatarUrl={artist.imageUrl || '/img/logo-flawless.png'}
+						<ArtistItem 
+							key={artist.idArtist}
+							name={artist.nameArtist}
+							code={artist.idArtist}
+							specialty={artist.specialty}
+							phone={artist.phone}
+							rating= {artist.rating}
+							reviewCount={artist.reviewCount}
+							avatarUrl={artist.avatar}
 							bgColor={"#fef2f2"}
+							
 						/>
 					))
 				)}
 			</div>
 			<Pagination
 				currentPage={currentPage}
-				totalItems={filteredArtists.length}
+				totalItems={totalItems}
 				itemsPerPage={itemsPerPage}
 				onPageChange={handlePageChange}
 				onItemsPerPageChange={handleItemsPerPageChange}

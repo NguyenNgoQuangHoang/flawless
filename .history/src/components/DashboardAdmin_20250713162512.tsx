@@ -7,7 +7,6 @@ import { fetchBestService } from "@/redux/slices/bestServiceSlice";
 import { fetchBestArtist } from "@/redux/slices/bestArtistSlice";
 import { fetchTotalCustomer } from "@/redux/slices/customerSlice";
 import { fetchTotalArtist } from "@/redux/slices/artistSlice";
-import { fetchAppointments } from "@/redux/slices/appointmentSlice";
 import type { RootState, AppDispatch } from "../redux/store";
 import {
 	FaStar,
@@ -133,8 +132,8 @@ interface BookingState {
 export default function DashboardAdmin() {
 	// 1. API totalRevenue
 	const dispatch = useDispatch<AppDispatch>();
-	const { data: dataRevenue, loading } = useSelector(
-		(state: RootState) => state.revenue
+	const dataRevenue = useSelector<RootState, RevenueData | null>(
+		(state) => state.revenue.data
 	);
 
 	useEffect(() => {
@@ -266,8 +265,8 @@ export default function DashboardAdmin() {
 	].sort((a, b) => b.avgRating - a.avgRating);
 
 	// 5. API totalCustomer
-	const { data: dataCustomer, loading: customerLoading } = useSelector(
-		(state: RootState) => state.customer
+	const { data: dataCustomer } = useSelector(
+		(state: RootState) => state.customer,
 	);
 
 	useEffect(() => {
@@ -329,15 +328,6 @@ export default function DashboardAdmin() {
 		{ name: "Ban", value: banAr },
 	];
 
-	// Add appointments data
-	useEffect(() => {
-		dispatch(fetchAppointments({}));
-	}, [dispatch]);
-
-	const { data: appointmentData, loading: appointmentLoading } = useSelector(
-		(state: RootState) => state.appointment
-	);
-
 	// *** Kiểm tra đã fetch data từ api chưa
 	// useEffect(() => {
 	// 	if (dataArtist) {
@@ -355,11 +345,9 @@ export default function DashboardAdmin() {
 							className="p-4 rounded-2xl shadow-lg bg-gradient-to-r from-pink-100 to-red-100 text-gray-800 flex items-center gap-4 hover:shadow-2xl hover:scale-105 hover:cursor-pointer hover:text-orange-900 hover:shadow-red-300 hover:bg-gradient-to-r hover:from-pink-200 hover:to-red-200 hover:border-2 hover:border-red-300 hover:border-solid transition-shadow duration-300"
 							title="Earnings"
 							value={
-								loading
-									? "Loading..."
-									: dataRevenue?.totalIncomeAllYear
-										? formatCurrencyVND(dataRevenue.totalIncomeAllYear)
-										: "0 VNĐ"
+								dataRevenue?.totalIncomeAllYear
+									? formatCurrencyVND(dataRevenue.totalIncomeAllYear)
+									: "Loading..."
 							}
 							icon={faDollarSign}
 						/>
@@ -367,11 +355,9 @@ export default function DashboardAdmin() {
 							className="p-4 rounded-2xl shadow-lg bg-gradient-to-r from-green-100 to-emerald-100 text-gray-800 flex items-center gap-4 hover:shadow-2xl hover:scale-105 hover:cursor-pointer hover:text-emerald-950 hover:shadow-emerald-300 hover:bg-gradient-to-r hover:from-green-200 hover:to-emerald-200 hover:border-2 hover:border-emerald-300 hover:border-solid transition-shadow duration-300"
 							title="Total Customers"
 							value={
-								customerLoading
-									? "Loading..."
-									: dataCustomer?.totalCustomerAllYear != null
-										? dataCustomer.totalCustomerAllYear.toString()
-										: "0"
+								dataCustomer?.totalCustomerAllYear != null
+									? dataCustomer.totalCustomerAllYear.toString()
+									: "Loading..."
 							}
 							icon={faUser}
 						/>
@@ -379,9 +365,7 @@ export default function DashboardAdmin() {
 							className="p-4 rounded-2xl shadow-lg bg-gradient-to-r from-green-100 to-emerald-100 text-gray-800 flex items-center gap-4 hover:shadow-2xl hover:scale-105 hover:cursor-pointer hover:text-emerald-950 hover:shadow-emerald-300 hover:bg-gradient-to-r hover:from-green-200 hover:to-emerald-200 hover:border-2 hover:border-emerald-300 hover:border-solid transition-shadow duration-300"
 							title="Total Artists"
 							value={
-								dataArtist?.loading
-									? "Loading..."
-									: dataArtist?.data?.totalArtistAllYear?.toString() ?? "0"
+								dataArtist?.data?.totalArtistAllYear ?? "Loading..."
 							}
 							icon={faUserTie}
 						/>{" "}
@@ -389,11 +373,11 @@ export default function DashboardAdmin() {
 							className="p-4 rounded-2xl shadow-lg bg-gradient-to-r from-pink-100 to-red-100 text-gray-800 flex items-center gap-4 hover:shadow-2xl hover:scale-105 hover:cursor-pointer hover:text-orange-900 hover:shadow-red-300 hover:bg-gradient-to-r hover:from-pink-200 hover:to-red-200 hover:border-2 hover:border-red-300 hover:border-solid transition-shadow duration-300"
 							title="Appointments"
 							value={
-								appointmentLoading
-									? "Loading..."
-									: appointmentData?.totalAppointmentsAllYear
-										? formatCurrency(appointmentData.totalAppointmentsAllYear)
-										: "0 times"
+								dataBooking?.data?.totalBookingAllYear
+									? formatCurrency(
+										dataBooking.data.totalBookingAllYear,
+									)
+									: "Loading..."
 							}
 							icon={faCalendarCheck}
 						/>
@@ -514,7 +498,7 @@ export default function DashboardAdmin() {
 								<h2 className="text-lg font-semibold">Booking</h2>
 								<div className="flex items-center gap-2 text-sm text-gray-600 mt-1">
 									<span className="text-2xl font-bold text-black">
-										{selectedYearDataBooking?.totalBookingPerYear?.toLocaleString() ??
+										{selectedYearDataBooking?.totalBookingPerYear.toLocaleString() ??
 											"0"}
 									</span>
 									<span className="text-gray-400">Total Booking</span>

@@ -26,8 +26,8 @@ export default function ArtistList() {
 	// Filter data based on search
 	const filteredArtists = Array.isArray(dataArtistList)
 		? dataArtistList.filter((artist) =>
-			artist.name?.toLowerCase().includes(artistSearch.toLowerCase()) ||
-			artist.tagName?.toLowerCase().includes(artistSearch.toLowerCase())
+			artist.name.toLowerCase().includes(artistSearch.toLowerCase()) ||
+			artist.tagName.toLowerCase().includes(artistSearch.toLowerCase())
 		)
 		: [];
 

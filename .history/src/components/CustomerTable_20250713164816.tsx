@@ -111,7 +111,7 @@ export default function CustomerTable() {
 			</div>
 
 			<div className="bg-white rounded-xl shadow-sm overflow-x-auto w-full max-w-[100vw]">
-				<table className="w-full text-sm text-black">
+				<table className="w-full text-sm black">
 					<thead>
 						<tr className="text-gray-400 text-left border-b">
 							<th className="py-3 px-4 font-normal">Customer ID</th>

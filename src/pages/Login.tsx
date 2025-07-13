@@ -1,10 +1,37 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { login, setEmail } from '../redux/slices/authSlice';
+import type { RootState } from '../redux/store';
 
 const LoginPage = () => {
+    const [email, setEmailInput] = useState('');
+    const [password, setPassword] = useState('');
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const { isLoading, error, isSuccess, requiresTwoFactor, token } = useSelector((state: RootState) => state.auth);
+
+    useEffect(() => {
+        if (isSuccess) {
+            if (requiresTwoFactor) {
+                // Lưu email vào Redux store khi yêu cầu 2FA
+                dispatch(setEmail(email));
+                navigate('/two_face');
+            } else if (token) {
+                navigate('/dashboard-admin');
+            }
+        }
+    }, [isSuccess, requiresTwoFactor, token, navigate, dispatch, email]);
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        await dispatch(login({ email, password }) as any);
+    };
+
     return (
         <div className="min-h-screen bg-white flex items-center justify-center p-8">
             <div className="flex flex-col md:flex-row w-full max-w-7xl h-[800px] bg-white rounded-3xl shadow-2xl overflow-hidden">
-
                 {/* Left Side */}
                 <div className="md:w-1/2 w-full bg-gradient-to-b from-[#DABEDB] to-[#C8A7CB] p-14 flex flex-col justify-center items-center text-white text-center">
                     <div className="text-4xl mb-4">✨</div>
@@ -23,7 +50,6 @@ const LoginPage = () => {
                             />
                         </div>
                     </div>
-
                 </div>
 
                 {/* Right Side */}
@@ -31,13 +57,22 @@ const LoginPage = () => {
                     <h2 className="text-4xl font-bold text-gray-800 mb-2">Đăng Nhập</h2>
                     <p className="text-lg text-gray-500 mb-8">Bắt đầu hành trình làm đẹp của bạn</p>
 
-                    <form className="space-y-6">
+                    {error && (
+                        <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg">
+                            {error}
+                        </div>
+                    )}
+
+                    <form className="space-y-6" onSubmit={handleSubmit}>
                         <div>
                             <label className="text-base font-medium text-gray-700">Email</label>
                             <input
                                 type="email"
                                 placeholder="Email"
+                                value={email}
+                                onChange={(e) => setEmailInput(e.target.value)}
                                 className="w-full mt-2 px-5 py-3 border border-gray-300 rounded-lg text-lg focus:outline-none focus:ring-2 focus:ring-purple-400"
+                                required
                             />
                         </div>
                         <div>
@@ -45,15 +80,20 @@ const LoginPage = () => {
                             <input
                                 type="password"
                                 placeholder="Mật khẩu"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
                                 className="w-full mt-2 px-5 py-3 border border-gray-300 rounded-lg text-lg focus:outline-none focus:ring-2 focus:ring-purple-400"
+                                required
                             />
                         </div>
 
                         <button
                             type="submit"
-                            className="w-full py-3 text-lg bg-[#C29BB5] hover:bg-[#b387a5] text-white rounded-lg font-semibold transition"
+                            disabled={isLoading}
+                            className={`w-full py-3 text-lg bg-[#C29BB5] hover:bg-[#b387a5] text-white rounded-lg font-semibold transition ${isLoading ? 'opacity-50 cursor-not-allowed' : ''
+                                }`}
                         >
-                            Đăng Nhập
+                            {isLoading ? 'Đang xử lý...' : 'Đăng Nhập'}
                         </button>
                     </form>
 

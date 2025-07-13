@@ -266,8 +266,8 @@ export default function DashboardAdmin() {
 	].sort((a, b) => b.avgRating - a.avgRating);
 
 	// 5. API totalCustomer
-	const { data: dataCustomer, loading: customerLoading } = useSelector(
-		(state: RootState) => state.customer
+	const { data: dataCustomer } = useSelector(
+		(state: RootState) => state.customer,
 	);
 
 	useEffect(() => {
@@ -367,7 +367,7 @@ export default function DashboardAdmin() {
 							className="p-4 rounded-2xl shadow-lg bg-gradient-to-r from-green-100 to-emerald-100 text-gray-800 flex items-center gap-4 hover:shadow-2xl hover:scale-105 hover:cursor-pointer hover:text-emerald-950 hover:shadow-emerald-300 hover:bg-gradient-to-r hover:from-green-200 hover:to-emerald-200 hover:border-2 hover:border-emerald-300 hover:border-solid transition-shadow duration-300"
 							title="Total Customers"
 							value={
-								customerLoading
+								dataCustomer?.loading
 									? "Loading..."
 									: dataCustomer?.totalCustomerAllYear != null
 										? dataCustomer.totalCustomerAllYear.toString()

@@ -12,17 +12,14 @@ import reviewReducer from "./slices/reviewSlice";
 import appointmentReducer from "./slices/appointmentSlice";
 import artistListReducer from "./slices/artistListSlice";
 import customerListReducer from "./slices/customerListSlice";
-import authReducer from "./slices/authSlice";
+// import other reducers...
 
 const persistConfig = {
 	key: "root",
 	storage,
-	whitelist: ["artistList", "auth"], // persist these reducers
+	whitelist: ["artistList"], // chỉ persist phần này
 };
-
 const persistedArtistReducer = persistReducer(persistConfig, artistListReducer);
-const persistedAuthReducer = persistReducer(persistConfig, authReducer);
-
 export const store = configureStore({
 	reducer: {
 		search: searchReducer,
@@ -36,7 +33,7 @@ export const store = configureStore({
 		appointment: appointmentReducer,
 		artistList: persistedArtistReducer,
 		customerList: customerListReducer,
-		auth: persistedAuthReducer,
+		// other reducers...
 	},
 	middleware: (getDefaultMiddleware) =>
 		getDefaultMiddleware({
