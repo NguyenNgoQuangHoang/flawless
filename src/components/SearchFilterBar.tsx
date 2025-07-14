@@ -66,12 +66,7 @@ export default function SearchFilterBar({ context }: SearchFilterBarProps) {
 				value={inputValue}
 				onChange={onChange}
 			/>
-			<button className="bg-green-100 text-green-700 px-4 py-2 rounded-full">
-				Service
-			</button>
-			<button className="bg-green-100 text-green-700 px-4 py-2 rounded-full">
-				Artist
-			</button>
+		
 			<div className="sm:ml-auto flex items-center gap-2">
 				{context === "appointments" && (
 					<DatePicker
@@ -94,11 +89,6 @@ export default function SearchFilterBar({ context }: SearchFilterBarProps) {
 						showYearDropdown
 						scrollableYearDropdown
 					/>
-				)}
-				{(context === "customers" || context === "artists") && (
-					<button className="bg-green-100 text-green-700 px-4 py-2 rounded-full">
-						+ Add {context === "customers" ? "Customer" : "Artist"}
-					</button>
 				)}
 			</div>
 		</div>

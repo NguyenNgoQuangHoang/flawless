@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Provider } from "react-redux";
 import { store, persistor } from "./redux/store";
 import { PersistGate } from "redux-persist/integration/react";
-// Import các page/layout/component
+
 import Appointments from "./pages/Appointments";
 import CustomerListPage from "./pages/CustomerListPage";
 import ArtistPage from "./pages/ArtistPage";
@@ -28,7 +28,7 @@ export default function App() {
 
 							{/* Route có layout dùng Outlet */}
 							<Route element={<Layout />}>
-								<Route path="/" element={<Navigate to="/DashBoardAdminPage" />} />
+								<Route path="/" element={<Navigate to="/login" />} />
 								
 								<Route
 									path="/dashboard-admin"

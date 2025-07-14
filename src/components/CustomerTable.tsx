@@ -58,10 +58,10 @@ export default function CustomerTable() {
 
 	const handleItemsPerPageChange = (newItemsPerPage: number) => {
 		setItemsPerPage(newItemsPerPage);
-		setCurrentPage(1); // Reset to first page when changing items per page
+		setCurrentPage(1); 
 	};
 
-	// Handle search parameter changes
+	
 	const handleSearchParamChange = (params: Partial<AppointmentSearchParams>) => {
 		setSearchParams(prev => ({
 			...prev,
