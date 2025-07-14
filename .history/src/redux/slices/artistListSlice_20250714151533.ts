@@ -53,37 +53,8 @@ export const fetchArtistList = createAsyncThunk(
 			throw new Error(response.data.errorMessage || 'Failed to fetch artist list');
 		}
 
-		const rawArtists = response.data.artists || response.data.data || [];
-		const users = rawArtists.map((a: any) => ({
-			idArtist: a.id,
-			nameArtist: a.name,
-			avatar: a.imageUrl,
-			specialty: a.tagName,
-			status: a.status ?? 1,
-			gender: a.gender,
-			phone: a.phoneNumber,
-			email: a.email,
-			dob: a.dob || '',
-			bankAccount: { bank: '', stk: '', name: '' },
-			address: a.address,
-			areaBook: '',
-			note: '',
-			aboutArtist: '',
-			timeJoin: '',
-			services: [],
-			certificateImg: [],
-			reviewCount: 0,
-			rating: 0,
-			experience: '',
-			schedule: [],
-			totalIncome: 0,
-			totalBooked: 0,
-			totalCancel: 0,
-			totalCustomer: 0,
-			productUsed: [],
-		}));
 		return {
-			users,
+			users: response.data.data || [],
 			totalCount: response.data.totalCount || 0,
 		};
 	},

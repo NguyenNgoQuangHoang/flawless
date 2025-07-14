@@ -25,16 +25,6 @@ export default function ArtistItem({
 	const handleClick = () => {
 		navigate(`/artists/${code}`); // 👉 code là idArtist
 	};
-	const handleAccept = (e: React.MouseEvent) => {
-		e.stopPropagation();
-		console.log(`Accept artist: ${code}`);
-		// TODO: Gọi API accept nếu cần
-	};
-	const handleCancel = (e: React.MouseEvent) => {
-		e.stopPropagation();
-		console.log(`Cancel artist: ${code}`);
-		// TODO: Gọi API cancel nếu cần
-	};
 	return (
 		<>
 			{" "}
@@ -72,8 +62,9 @@ export default function ArtistItem({
 						{Array.from({ length: 5 }).map((_, i) => (
 							<i
 								key={i}
-								className={`fa-star ${i < Math.floor(rating) ? "fa-solid" : "fa-regular"
-									}`}
+								className={`fa-star ${
+									i < Math.floor(rating) ? "fa-solid" : "fa-regular"
+								}`}
 							></i>
 						))}
 						<span className="text-black font-medium">{rating.toFixed(1)}</span>
@@ -81,20 +72,6 @@ export default function ArtistItem({
 					<p className="text-xs text-gray-500">
 						({reviewCount.toLocaleString()} reviews)
 					</p>
-					<div className="flex justify-center gap-2 mt-3">
-						<button
-							onClick={handleAccept}
-							className="px-4 py-1 bg-green-500 text-white rounded hover:bg-green-600"
-						>
-							Accept
-						</button>
-						<button
-							onClick={handleCancel}
-							className="px-4 py-1 bg-red-500 text-white rounded hover:bg-red-600"
-						>
-							Cancel
-						</button>
-					</div>
 				</div>
 			</div>
 		</>
