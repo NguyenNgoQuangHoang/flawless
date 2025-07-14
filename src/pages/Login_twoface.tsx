@@ -23,32 +23,37 @@ const TwoFactorPage = () => {
       const response = await axios.post(
         'https://flawless-a2exc2hwcge8bbfz.canadacentral-01.azurewebsites.net/api/user-account/verify-twofactor-code',
         {
-          email: email,
+          email,
           twoFactorCode: otp
         },
         {
           headers: {
-            'accept': '*/*',
+            accept: '*/*',
             'Content-Type': 'application/json',
           },
         }
       );
 
       if (response.data.isSuccess) {
-        // Store the token and refresh token
         dispatch(setCredentials({
           token: response.data.token,
           refreshToken: response.data.refreshToken,
           isSuccess: response.data.isSuccess,
           errorMessage: response.data.errorMessage,
-          email: email // Add this line
+          email
         }));
         navigate('/dashboard-admin');
       } else {
         setError(response.data.errorMessage || 'Verification failed');
       }
-    } catch (err: any) {
-      setError(err.response?.data?.errorMessage || 'Failed to verify code');
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        console.error('Axios error:', err.response?.data);
+        setError(err.response?.data?.errorMessage || 'Failed to verify code');
+      } else {
+        console.error('Unknown error:', err);
+        setError('Failed to verify code');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -65,13 +70,19 @@ const TwoFactorPage = () => {
         formData,
         {
           headers: {
-            'accept': '*/*',
+            accept: '*/*',
             'Content-Type': 'multipart/form-data',
           },
         }
       );
-    } catch (err: any) {
-      setError(err.response?.data?.errorMessage || 'Failed to resend code');
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        console.error('Resend code error:', err.response?.data);
+        setError(err.response?.data?.errorMessage || 'Failed to resend code');
+      } else {
+        console.error('Unknown error (resend):', err);
+        setError('Failed to resend code');
+      }
     }
   };
 
@@ -136,8 +147,9 @@ const TwoFactorPage = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className={`w-full py-3 text-lg bg-[#C29BB5] hover:bg-[#b387a5] text-white rounded-lg font-semibold transition ${isLoading ? 'opacity-50 cursor-not-allowed' : ''
-                }`}
+              className={`w-full py-3 text-lg bg-[#C29BB5] hover:bg-[#b387a5] text-white rounded-lg font-semibold transition ${
+                isLoading ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
             >
               {isLoading ? 'Đang xử lý...' : 'Xác minh'}
             </button>

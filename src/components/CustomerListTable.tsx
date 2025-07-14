@@ -6,7 +6,7 @@ import Pagination from "./Pagination";
 import { fetchCustomerList } from "@/redux/slices/customerListSlice";
 
 export default function CustomerListTable() {
-	// appointment data
+	
 	const dispatch = useDispatch<AppDispatch>();
 	const { customerList: dataCustomerList } = useSelector(
 		(state: RootState) => state.customerList,
@@ -16,24 +16,24 @@ export default function CustomerListTable() {
 		dispatch(fetchCustomerList());
 	}, [dispatch]);
 
-	// test đã fetch dữ liệu thành công chưa
+	
 	useEffect(() => {
 		if (dataCustomerList) {
 			console.log("Dữ liệu dataCustomerList đã fetch:", dataCustomerList);
 		}
 	}, [dataCustomerList]);
 
-	// Search
+	
 	const search = useSelector((state: RootState) => state.search.customerSearch);
 	const [currentPage, setCurrentPage] = useState(1);
 	const [itemsPerPage, setItemsPerPage] = useState(10);
 
-	// Lọc dữ liệu theo search (tên customer hoặc artist) và ngày tháng năm
+	
 	const filteredCustomerList = dataCustomerList?.filter(
 		(c) =>
 			(c.nameCus.toLowerCase().includes(search.toLowerCase())));
 
-	// Calculate pagination
+	
 	const indexOfLastItem = currentPage * itemsPerPage;
 	const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 	const currentItems = filteredCustomerList.slice(

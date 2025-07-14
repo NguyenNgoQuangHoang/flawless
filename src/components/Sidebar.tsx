@@ -19,7 +19,7 @@ export default function Sidebar() {
 			<div className="flex items-center gap-2 px-6 py-6">
 				<span className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center overflow-hidden">
 					<img
-						src="/public/logo-flawless.png"
+						src="/img/flawless.png"
 						alt="Flawless Logo"
 						className="w-full h-full object-cover rounded-full"
 					/>
